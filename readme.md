@@ -1,4 +1,4 @@
-##GPTRPG
+GPTRPG
 
 An experiment with using GPT3 to generate content for Dungeons & Dragons, 5th Edition
 
