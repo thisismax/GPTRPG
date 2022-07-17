@@ -26,8 +26,6 @@ response = o.Completion.create(
 
 print(response)
 
-print("")
-
 '''
 To create a model I need to:
 - build a prompt
