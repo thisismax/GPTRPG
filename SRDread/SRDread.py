@@ -12,9 +12,20 @@ from pathlib import Path
 
 FILE = Path('.')/'GPTRPG'/'SRDread'/'SRDmonsters.csv'
 
-df = pd.read_csv(FILE)
+fullData = pd.read_csv(FILE)
+fullData.rename(columns={"intel":"int","strength":"str"},inplace=True)
+#print(fullData.columns)
 
-print(df.columns)
+testData = fullData[['name','size','type','cr','ac','hp','str','dex','con','int','wis','cha']].copy()
+
+### reformat for testing
+testData = testData.assign(prompt=testData[['name','size','type','cr']].astype(str).apply(" ".join,axis=1)+"\n\n###\n\n")
+
+print(testData['prompt'].head(5))
+
+#testJSON = pd.DataFrame.to_json(testData,orient="records",lines=True)
+
+#print(testJSON)
 
 # tasks
 # determine proper final format

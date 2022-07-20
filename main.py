@@ -1,30 +1,38 @@
 import openai as o
-import os
+from os import getenv
 from pathlib import Path
 from dotenv import load_dotenv
 
-### Environment
 
-p = Path('.')
-ENV = p/"venv/.env"
-load_dotenv(ENV)
-APIKEY = os.getenv("OPENAI_API_KEY")
-ORGID = os.getenv("OPENAI_ORG_ID")
+def setup():
+    ### Environment
 
-### Openai setup
+    p = Path('.')
+    ENV = p/"venv/.env"
+    load_dotenv(ENV)
+    APIKEY = getenv("OPENAI_API_KEY")
+    ORGID = getenv("OPENAI_ORG_ID")
 
-o.organization = ORGID
-o.api_key = APIKEY
+    ### Openai setup
+    o.organization = ORGID
+    o.api_key = APIKEY
 
 
-response = o.Completion.create(
-  model="text-davinci-002",
-  prompt="Say this is a test",
-  max_tokens=6,
-  temperature=0
-)
+def test():
+    response = o.Completion.create(
+        model="text-davinci-002",
+        prompt="Say this is a test",
+        max_tokens=6,
+        temperature=0
+    )
 
-print(response)
+    print(response)
+
+    
+if __name__ == '__main__':
+    setup()
+    test()
+
 
 '''
 To create a model I need to:
