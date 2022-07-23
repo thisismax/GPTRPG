@@ -10,7 +10,7 @@
 import pandas as pd
 from pathlib import Path
 
-FILE = Path('.')/'GPTRPG'/'SRDread'/'SRDmonsters.csv'
+FILE = Path('.')/'SRDread'/'SRDmonsters.csv'
 
 fullData = pd.read_csv(FILE)
 fullData.rename(columns={"intel":"int","strength":"str"},inplace=True)
@@ -19,13 +19,20 @@ fullData.rename(columns={"intel":"int","strength":"str"},inplace=True)
 testData = fullData[['name','size','type','cr','ac','hp','str','dex','con','int','wis','cha']].copy()
 
 ### reformat for testing
-testData = testData.assign(prompt=testData[['name','size','type','cr']].astype(str).apply(" ".join,axis=1)+"\n\n###\n\n")
+# this is not quite right - I'm losing the column names doing it this way
+#testData = testData.assign(prompt=testData[['name','size','type','cr']].astype(str).apply("\n".join,axis=1)+"\n\n###\n\n")
+#testData = testData.assign(completion=testData[['ac','hp','str','dex','con','int','wis','cha']].astype(str).apply("\n".join,axis=1))
 
-print(testData['prompt'].head(5))
+#print(testData['completion'].head(5))
 
-#testJSON = pd.DataFrame.to_json(testData,orient="records",lines=True)
+promptJSON = pd.DataFrame.to_json(testData[['name','size','type','cr']],orient="records",lines=True)
+completionJSON = pd.DataFrame.to_json(testData[['ac','hp','str','dex','con','int','wis','cha']],orient="records",lines=True)
 
-#print(testJSON)
+print(promptJSON)
+print(completionJSON)
+
+# Ha I have to figure out how to format this properly so that it's convenient to read later also...
+# Also - apparently openAI has already read the SRD and knows the stats.
 
 # tasks
 # determine proper final format
