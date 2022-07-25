@@ -10,35 +10,34 @@
 import pandas as pd
 from pathlib import Path
 
-FILE = Path('.')/'SRDread'/'SRDmonsters.csv'
+INPUTFILE = Path('.')/'SRDread'/'SRDmonsters.csv'
+OUTPUTFILE = Path('.')/'SRDread'/'testModel.jsonl'
 
-fullData = pd.read_csv(FILE)
+fullData = pd.read_csv(INPUTFILE)
 fullData.rename(columns={"intel":"int","strength":"str"},inplace=True)
 #print(fullData.columns)
 
 testData = fullData[['name','size','type','cr','ac','hp','str','dex','con','int','wis','cha']].copy()
 
 ### reformat for testing
-# this is not quite right - I'm losing the column names doing it this way
-#testData = testData.assign(prompt=testData[['name','size','type','cr']].astype(str).apply("\n".join,axis=1)+"\n\n###\n\n")
-#testData = testData.assign(completion=testData[['ac','hp','str','dex','con','int','wis','cha']].astype(str).apply("\n".join,axis=1))
-
-#print(testData.tail(5))
 
 promptJSON = pd.DataFrame.to_json(testData[['name','size','type','cr']],orient="records",lines=True)
 completionJSON = pd.DataFrame.to_json(testData[['name','ac','hp','str','dex','con','int','wis','cha']],orient="records",lines=True)
 
-promptMark = ""
+promptMark = ''
 promptList = promptJSON.split('\n')[:-1]
 completionList = completionJSON.split('\n')[:-1]
 
-testJSON = ""
+testJSON = ''
 for p,c in zip(promptList,completionList):
-    testJSON += "{"+f"prompt:{p+promptMark},completion:{c}"+"}\n"
+    testJSON += "{"+f"\"prompt\":{p+promptMark},\"completion\":{c}"+"}\n"
 
-print(testJSON)
+with open(OUTPUTFILE,"w") as f:
+    f.write(testJSON)
 
-# tasks
-# determine proper final format
-# likely need to split up some columns:
-# senses, attributes, actions, legendary_actions
+
+## Notes - 2022.07.24
+# I should probably do the mathematical elements using python directly.
+# And generate the action list using OA?
+# It is possible that the basic usage is entirely calculated and does not require a model at all.
+# Hurray for learning!
